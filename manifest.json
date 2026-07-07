@@ -1,0 +1,27 @@
+{
+  "name": "Khayyam Advertiser & Auto Decor Center",
+  "short_name": "Khayyam Auto Decor",
+  "description": "Vehicle branding & interior customization billing calculator",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fafafa",
+  "theme_color": "#009150",
+  "icons": [
+    {
+      "src": "Khayyam-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "Khayyam-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "finance", "utilities"],
+  "lang": "en-PK",
+  "dir": "ltr"
+}
