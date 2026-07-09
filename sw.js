@@ -1,39 +1,18 @@
 // ─── Khayyam Advertiser & Auto Decor Center — Service Worker v2 ──────────────────
-const CACHE_NAME = 'khayyam-auto-v1';
+const CACHE_NAME = 'khayyam-auto-v2';
 
-const CACHE_NAME = 'khayyam-auto-v1';
 const LOCAL_ASSETS = [
   './index.html',
   './manifest.json',
   './Khayyam-logo.png'
 ];
 
-// ─── INSTALL ──────────────────────────────────────────────────
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(async cache => {
-      await cache.addAll(LOCAL_ASSETS);
-      return self.skipWaiting();
-    })
-  );
-});
-
-// ─── ACTIVATE ─────────────────────────────────────────────────
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-      );
-    }).then(() => self.clients.claim())
-  );
-});
-
 const CDN_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
 ];
 
+// ─── INSTALL ──────────────────────────────────────────────────
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async cache => {
@@ -49,6 +28,7 @@ self.addEventListener('install', event => {
   );
 });
 
+// ─── ACTIVATE ─────────────────────────────────────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
@@ -59,6 +39,7 @@ self.addEventListener('activate', event => {
   );
 });
 
+// ─── FETCH: Cache First + background revalidate ───────────────
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const url = event.request.url;
