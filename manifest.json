@@ -1,7 +1,7 @@
 {
-  "name": "Khayyam Advertiser & Auto Decor Center",
-  "short_name": "Khayyam Auto Decor",
-  "description": "Vehicle branding & interior customization billing calculator",
+  "name": "Khayyam Advertiser & Auto Decor Center, Okara",
+  "short_name": "Khayyam",
+  "description": "Vehicle branding & advertiser billing calculator",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
