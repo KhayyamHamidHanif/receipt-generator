@@ -1,5 +1,5 @@
-// ─── Khayyam Advertiser & Auto Decor Center — Service Worker v2 ──────────────────
-const CACHE_NAME = 'khayyam-auto-v2';
+// ─── Khayyam Advertiser & Auto Decor Center — Service Worker v3 ──────────────────
+const CACHE_NAME = 'khayyam-auto-v3';
 
 const LOCAL_ASSETS = [
   './index.html',
@@ -16,15 +16,33 @@ const CDN_ASSETS = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async cache => {
-      await cache.addAll(LOCAL_ASSETS);
-      await Promise.allSettled(
-        CDN_ASSETS.map(url =>
-          fetch(url, { mode: 'cors' })
-            .then(res => { if (res.ok) cache.put(url, res); })
-            .catch(() => {})
-        )
-      );
-    }).then(() => self.skipWaiting())
+      console.log('🔧 Installing Service Worker...');
+      try {
+        // Cache local files first
+        await cache.addAll(LOCAL_ASSETS);
+        console.log('✅ Local assets cached');
+        
+        // Cache CDN assets (don't fail if they don't load)
+        await Promise.allSettled(
+          CDN_ASSETS.map(url =>
+            fetch(url, { mode: 'cors' })
+              .then(res => {
+                if (res.ok) {
+                  cache.put(url, res);
+                  console.log('✅ Cached:', url);
+                }
+              })
+              .catch(() => console.log('⚠️ Failed to cache:', url))
+          )
+        );
+        console.log('✅ Installation complete!');
+      } catch (error) {
+        console.error('❌ Installation failed:', error);
+      }
+    }).then(() => {
+      console.log('🚀 Skip waiting...');
+      return self.skipWaiting();
+    })
   );
 });
 
@@ -32,10 +50,19 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
+      .then(keys => {
+        console.log('📁 Existing caches:', keys);
+        return Promise.all(
+          keys.filter(k => k !== CACHE_NAME).map(k => {
+            console.log('🗑️ Deleting old cache:', k);
+            return caches.delete(k);
+          })
+        );
+      })
+      .then(() => {
+        console.log('✅ Activation complete, claiming clients...');
+        return self.clients.claim();
+      })
   );
 });
 
@@ -47,31 +74,37 @@ self.addEventListener('fetch', event => {
 
   event.respondWith(
     caches.open(CACHE_NAME).then(async cache => {
+      // Try cache first
       const cached = await cache.match(event.request);
-
-      const networkPromise = fetch(event.request)
-        .then(response => {
-          if (response && response.status === 200 && response.type !== 'opaque') {
-            cache.put(event.request, response.clone());
-          }
-          return response;
-        })
-        .catch(() => null);
-
-      if (cached) return cached;
-
-      const networkResponse = await networkPromise;
-      if (networkResponse) return networkResponse;
-
-      if (event.request.destination === 'document') {
-        const fallback = await cache.match('./index.html');
-        if (fallback) return fallback;
+      if (cached) {
+        console.log('📦 Serving from cache:', event.request.url);
+        return cached;
       }
 
-      return new Response('Offline — resource unavailable', {
-        status: 503,
-        headers: { 'Content-Type': 'text/plain' }
-      });
+      // Fallback to network
+      try {
+        const response = await fetch(event.request);
+        if (response && response.status === 200 && response.type !== 'opaque') {
+          cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch (error) {
+        console.log('⚠️ Network failed, looking for fallback...');
+        
+        // If it's a document request, serve index.html
+        if (event.request.destination === 'document' || event.request.mode === 'navigate') {
+          const fallback = await cache.match('./index.html');
+          if (fallback) {
+            console.log('📄 Serving fallback index.html');
+            return fallback;
+          }
+        }
+        
+        return new Response('Offline — resource unavailable', {
+          status: 503,
+          headers: { 'Content-Type': 'text/plain' }
+        });
+      }
     })
   );
 });
