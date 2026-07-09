@@ -113,6 +113,7 @@ u-dim{display:inline;font-size:.74em;font-weight:400;opacity:.6;color:inherit;fo
   line-height: 1.1;
   margin-bottom: 2px;
   letter-spacing: -0.5px;
+  animation: fadeInUp 1s ease-out;
 }
 
 @keyframes splashText {
@@ -498,10 +499,25 @@ right:0;
 .btn-close-x:hover{background:#fff0f0}
 
 /* ══ RECEIPT PAPER ═══════════════════════════════════════════ */
-.receipt-paper{
-  background:#fff;color:#111;border-radius:12px;padding:16px;
-  max-width:420px;margin:0 auto;box-shadow:0 8px 26px rgba(0,0,0,.2);
-  position:relative;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+
+.receipt-paper {
+  background: #fff;
+  color: #111;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 420px;
+  margin: 0 auto;
+  box-shadow: 0 8px 26px rgba(0,0,0,.2);
+  position: relative;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+
+/* Make sure all content sits on top of the watermark */
+.receipt-paper > * {
+  position: relative;
+  z-index: 1;
 }
 .rh{text-align:center;padding-bottom:9px;margin-bottom:9px;border-bottom:3px solid var(--primary)}
 .rh-logo{width:58px;height:58px;border-radius:50%;border:2px solid var(--primary);display:inline-flex;align-items:center;justify-content:center;margin-bottom:4px;overflow:hidden;background:#fff}
@@ -551,14 +567,40 @@ right:0;
 /* ══ BOTTOM ACTIONS ════════════════════════════════════════════ */
 .r-actions-bottom{display:flex;gap:7px;justify-content:center;margin-top:9px;flex-wrap:wrap}
 .r-actions-bottom button{padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none}
-.btn-save-img{
-  background:radial-gradient(circle at center,#009150 0%,#006B3F 100%);
-  color:#fff;
+.btn-save-img {
+  background: radial-gradient(circle at center, #f5f5f5 0%, #e0e0e0 100%);
+  color: #333333;
+  border: 1.5px solid #CCCCCC;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.btn-share-img{
+.btn-save-img:active { 
+  transform: scale(0.97);
+  background: radial-gradient(circle at center, #e8e8e8 0%, #d0d0d0 100%);
+}
+.btn-share-img {
   background:radial-gradient(circle at center,#1e8449 0%,var(--forest) 100%);
   color:#fff;
 }
+.btn-export {
+  background: radial-gradient(circle at center, #4285F4 0%, #1a5cb5 100%);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-export:active { transform: scale(0.97); }
+.btn-export.uploading { background: radial-gradient(circle at center, #ff9800 0%, #e68900 100%); }
+.btn-export.success { background: radial-gradient(circle at center, #4CAF50 0%, #388E3C 100%); }
+
 
 /* ══ APP FOOTER ═══════════════════════════════════════════════ */
 .app-wm{text-align:center;font-size:10px;color:rgba(0,0,0,.3);font-style:italic;padding:5px 0 10px;opacity:.7;margin-top:8px;clear:both}
@@ -601,8 +643,8 @@ right:0;
   </div>
   <div class="splash-phones">0322-4528649 &nbsp;|&nbsp; 0315-6959749 &nbsp;|&nbsp; 0324-6885149</div>
   <div class="splash-addr">1-KM Okara-Faisalabad Road, Near Bank of Punjab, Khan Colony, Okara.</div>
-  <button class="splash-enter" onclick="enterApp()">Make Receipt</button>
-  <div class="splash-wm">Developed &amp; Maintained by:<br><span class="brand">The WhiteMoon Jeweller</span></div>
+  <button class="splash-enter" onclick="enterApp()">Generate Receipt</button>
+  <div class="splash-wm">Developed &amp; Maintained by:<br><span class="brand">The Asad Jewellers, Okara</span></div>
 </div>
 
 <!-- ══ MAIN APP ══ -->
@@ -627,39 +669,40 @@ right:0;
     </div>
   </div>
 
-  <!-- ITEMIZED LEDGER -->
-  <div class="card">
-    <div class="card-title">Items</div>
-    <table class="ledger-grid" id="ledgerTable">
-      <thead>
-        <tr><th>Item</th><th>Price</th><th>Quantity</th><th>Total</th></tr>
-      </thead>
-      <tbody id="ledgerBody">
-        <tr id="row1">
-          <td class="item-col"><input type="text" id="item1" placeholder="Item 1" oninput="handleRowInput(1)"/></td>
-          <td class="price-col">
-            <div class="price-gemini-wrap">
-              <input type="number" id="price1" placeholder="0 PKR" oninput="handleRowInput(1)" min="0"/>
-              <span class="gemini-box hidden" id="priceGemini1">0 PKR</span>
-            </div>
-          </td>
-          <td class="qty-col"><input type="number" id="qty1" placeholder="0 QTY" oninput="handleRowInput(1)" min="0"/></td>
-          <td class="total-col row-total" id="total1">—</td>
-        </tr>
-        <tr id="row2" class="row-locked" onclick="unlockRow(2)">
-          <td class="item-col"><input type="text" id="item2" placeholder="Item 2" oninput="handleRowInput(2)" readonly/></td>
-          <td class="price-col">
-            <div class="price-gemini-wrap">
-              <input type="number" id="price2" placeholder="0 PKR" oninput="handleRowInput(2)" min="0" readonly/>
-              <span class="gemini-box hidden" id="priceGemini2">0 PKR</span>
-            </div>
-          </td>
-          <td class="qty-col"><input type="number" id="qty2" placeholder="0 QTY" oninput="handleRowInput(2)" min="0" readonly/></td></td>
-          <td class="total-col row-total" id="total2">—</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<!-- ITEMIZED LEDGER -->
+<div class="card">
+  <div class="card-title">Items</div>
+  <table class="ledger-grid" id="ledgerTable">
+    <thead>
+      <tr><th>Item</th><th>Price</th><th>Quantity</th><th>Total</th></tr>
+    </thead>
+    <tbody id="ledgerBody">
+      <tr id="row1">
+        <td class="item-col"><input type="text" id="item1" placeholder="Item 1" oninput="handleRowInput(1)"/></td>
+        <td class="price-col">
+          <div class="price-gemini-wrap">
+            <input type="number" id="price1" placeholder="0 PKR" oninput="handleRowInput(1)" min="0"/>
+            <span class="gemini-box hidden" id="priceGemini1">0 PKR</span>
+          </div>
+        </td>
+        <td class="qty-col"><input type="number" id="qty1" placeholder="0 QTY" oninput="handleRowInput(1)" min="0"/></td>
+        <td class="total-col row-total" id="total1">—</td>
+      </tr>
+      <tr id="row2" class="row-locked" onclick="unlockRow(2)">
+        <td class="item-col"><input type="text" id="item2" placeholder="Item 2" oninput="handleRowInput(2)" readonly/></td>
+        <td class="price-col">
+          <div class="price-gemini-wrap">
+            <input type="number" id="price2" placeholder="0 PKR" oninput="handleRowInput(2)" min="0" readonly/>
+            <span class="gemini-box hidden" id="priceGemini2">0 PKR</span>
+          </div>
+        </td>
+        <td class="qty-col"><input type="number" id="qty2" placeholder="0 QTY" oninput="handleRowInput(2)" min="0" readonly/></td>
+        <td class="total-col row-total" id="total2">—</td>
+      </tr>
+      <!-- Row 3 will be added by JavaScript -->
+    </tbody>
+  </table>
+</div>
 
   <!-- ACCOUNTING METRICS -->
   <div class="card">
@@ -763,10 +806,11 @@ right:0;
       <button class="btn-close-x" onclick="closeReceipt()" title="Close">✕</button>
       <div class="receipt-paper" id="receiptPaper"></div>
     </div>
-    <div class="r-actions-bottom">
-      <button class="btn-save-img" id="saveBtn" onclick="saveReceiptAsImage()">Save JPEG</button>
-      <button class="btn-share-img" id="shareBtn" onclick="shareReceiptAsImage()">Share Receipt</button>
-    </div>
+<div class="r-actions-bottom">
+  <button class="btn-save-img" id="saveBtn" onclick="saveReceiptAsImage()">Save</button>
+  <button class="btn-share-img" id="shareBtn" onclick="shareReceiptAsImage()">Share</button>
+  <button class="btn-export" id="driveBtn" onclick="uploadToDrive()">Export</button>
+</div>
   </div>
 </div>
 
@@ -982,14 +1026,32 @@ function addNewRow() {
 }
 
 // ══ ACCOUNTING CALC ════════════════════════════════════════════
+
 function calcAccounting() {
   let gross = 0;
   const rows = document.querySelectorAll('#ledgerBody tr');
+  
   rows.forEach((row, index) => {
     const rowNum = index + 1;
     const p = parseFloat(document.getElementById('price' + rowNum)?.value) || 0;
-    const q = parseInt(document.getElementById('qty' + rowNum)?.value) || 1;
-    gross += p * q;
+    const qtyInput = document.getElementById('qty' + rowNum);
+    const q = parseInt(qtyInput?.value) || 0;
+    const total = p * q;
+    
+    const totalEl = document.getElementById('total' + rowNum);
+    
+    // Check if user actually typed 0 (not placeholder)
+    if (qtyInput && qtyInput.value === '0') {
+      totalEl.textContent = '⚠️ Qty 0';
+      totalEl.style.color = '#cc3333';
+    } else if (q > 0) {
+      gross += total;
+      totalEl.textContent = fmtPK(total);
+      totalEl.style.color = 'var(--primary)';
+    } else {
+      totalEl.textContent = '—';
+      totalEl.style.color = 'var(--primary)';
+    }
   });
   
   const discount = parseFloat(document.getElementById('discount').value) || 0;
@@ -1003,7 +1065,6 @@ function calcAccounting() {
   document.getElementById('netTotal').innerHTML = `<span class="gemini-box">${fmtPK(net)} PKR</span>`;
   document.getElementById('totalPayable').innerHTML = `<span class="gemini-box">${fmtPK(totalPay)} PKR</span>`;
   
-  // FIXED: Discount Gemini - show only when >= 1000
   const discountGemini = document.getElementById('gDiscount');
   if (discount >= 1000) {
     discountGemini.textContent = fmtPK(discount) + ' PKR';
@@ -1012,7 +1073,6 @@ function calcAccounting() {
     discountGemini.classList.add('hidden');
   }
   
-  // FIXED: Arrears Gemini - show only when >= 1000
   const arrearsGemini = document.getElementById('gArrears');
   if (arrears >= 1000) {
     arrearsGemini.textContent = fmtPK(arrears) + ' PKR';
@@ -1023,6 +1083,7 @@ function calcAccounting() {
   
   calcCash();
 }
+
 
 // ══ CASH CALC ═══════════════════════════════════════════════════
 function calcCash() {
@@ -1313,26 +1374,39 @@ function buildReceiptHTML(rid, rows, custName, custPhone, vehicleNo, mgrName,
   </div>
 </div>
 
-<div class="rs">
-  <div class="rs-title">Customer</div>
-  <div class="rr"><span>Name</span><span class="rval">${custName}</span></div>
-  <div class="rr"><span>Phone</span><span class="rval">${custPhone}</span></div>
-  <div class="rr"><span>Vehicle</span><span class="rval">${vehicleNo}</span></div>
-  <div class="rr"><span>Managed By</span><span class="rval">${mgrName}</span></div>
-</div>
+<!-- Wrapper for watermark - only covers Customer, Items, and Bill Summary -->
+<div style="position: relative; overflow: hidden;">
 
-${rowsHtml ? `<div class="rs">
-  <div class="rs-title">Items</div>
-  ${rowsHtml}
-</div>` : '<div class="rs"><div class="rs-title">Items</div><div style="text-align:center;color:#999;padding:8px 0">No items added</div></div>'}
+  <!-- Watermark inside this wrapper -->
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; background-image: url('Khayyam-logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0.05; pointer-events: none; z-index: 0; border-radius: 50%;"></div>
 
-<div class="rs">
-  <div class="rs-title">Bill Summary</div>
-  <div class="r-grid">
-    ${billSummaryRows}
+  <!-- All content inside the wrapper sits on top -->
+  <div style="position: relative; z-index: 1;">
+
+    <div class="rs">
+      <div class="rs-title">Customer</div>
+      <div class="rr"><span>Name</span><span class="rval">${custName}</span></div>
+      <div class="rr"><span>Phone</span><span class="rval">${custPhone}</span></div>
+      <div class="rr"><span>Vehicle</span><span class="rval">${vehicleNo}</span></div>
+      <div class="rr"><span>Managed By</span><span class="rval">${mgrName}</span></div>
+    </div>
+
+    ${rowsHtml ? `<div class="rs">
+      <div class="rs-title">Items</div>
+      ${rowsHtml}
+    </div>` : '<div class="rs"><div class="rs-title">Items</div><div style="text-align:center;color:#999;padding:8px 0">No items added</div></div>'}
+
+    <div class="rs">
+      <div class="rs-title">Bill Summary</div>
+      <div class="r-grid">
+        ${billSummaryRows}
+      </div>
+    </div>
+
   </div>
 </div>
 
+<!-- Total Payable box stays OUTSIDE the watermark wrapper -->
 <div class="r-grand" style="background:#e8f5ee;border-color:${primary}">
   <div class="rg-lbl">Total Payable</div>
   <div class="rg-amt"><strong>${fmtPK(totalPay)} PKR/-</strong></div>
@@ -1357,7 +1431,7 @@ ${rowsHtml ? `<div class="rs">
   <span class="brand">Khayyam Advertiser &amp; Auto Decor Center</span><br>
   1-KM Okara-Faisalabad Road, Near Bank of Punjab, Khan Colony, Okara
 </div>
-<div class="r-wm">Powered by<br><span style="font-size:9.5px;font-weight:600">The WhiteMoon Jeweller</span></div>`;
+<div class="r-wm">Powered by<br><span style="font-size:9.5px;font-weight:600">The Asad Jewellers, Okara</span></div>`;
 }
 
 // ══ MODAL CONTROLS ═════════════════════════════════════════════
@@ -1442,6 +1516,206 @@ function shareReceiptAsImage() {
         btn.textContent = 'Share Receipt'; btn.disabled = false;
       });
   }, 300);
+}
+
+// ══ GOOGLE DRIVE EXPORT ════════════════════════════════════════
+
+// Your Google Apps Script URL from step 1
+const DRIVE_UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbynS-Eymi5bgLNQlfGLXwOt9pQ_fYRlqdwFa2RAxjYBpXY70VJNhvi3PjYHj8y2X8_d1g/exec';
+
+// IndexedDB setup for offline queue
+const DB_NAME = 'KhayyamExportQueue';
+const STORE_NAME = 'pending_exports';
+let db = null;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (db) { resolve(db); return; }
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => { db = request.result; resolve(db); };
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+  });
+}
+
+function saveToLocalQueue(data) {
+  return new Promise((resolve, reject) => {
+    openDB().then((db) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.add({ id: data.id, image: data.image, filename: data.filename, timestamp: Date.now() });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  });
+}
+
+function getAllFromQueue() {
+  return new Promise((resolve, reject) => {
+    openDB().then((db) => {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      const request = store.getAll();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  });
+}
+
+function removeFromQueue(id) {
+  return new Promise((resolve, reject) => {
+    openDB().then((db) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      const store = tx.objectStore(STORE_NAME);
+      store.delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  });
+}
+
+function getQueueCount() {
+  return new Promise((resolve) => {
+    openDB().then((db) => {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      const count = store.count();
+      count.onsuccess = () => resolve(count.result);
+      count.onerror = () => resolve(0);
+    });
+  });
+}
+
+function uploadToDrive() {
+  const btn = document.getElementById('driveBtn');
+  if (!btn) return;
+  
+  const receiptPaper = document.getElementById('receiptPaper');
+  const receiptId = document.getElementById('receiptId')?.textContent || getReceiptId();
+  
+  btn.textContent = '⏳ Preparing...';
+  btn.className = 'btn-export uploading';
+  btn.disabled = true;
+  
+  // Capture the receipt
+  html2canvas(receiptPaper, {
+    scale: 3,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: '#ffffff',
+    logging: false,
+    imageTimeout: 15000
+  }).then(canvas => {
+    const imageData = canvas.toDataURL('image/jpeg', 0.95);
+    const filename = receiptId + '.jpg';
+    
+    // Check if online
+    if (navigator.onLine) {
+      sendToDrive(imageData, filename, btn);
+    } else {
+      // Offline - save to local queue
+      saveToLocalQueue({ id: receiptId, image: imageData, filename: filename })
+        .then(() => {
+          btn.textContent = '📁 Offline Saved';
+          btn.className = 'btn-export uploading';
+          getQueueCount().then(count => {
+            setTimeout(() => {
+              btn.textContent = `Export (${count})`;
+              btn.className = 'btn-export';
+              btn.disabled = false;
+            }, 2500);
+          });
+        });
+    }
+  }).catch(err => {
+    alert('Failed to capture receipt: ' + err.message);
+    btn.textContent = 'Export';
+    btn.className = 'btn-export';
+    btn.disabled = false;
+  });
+}
+
+function sendToDrive(imageData, filename, btn) {
+  btn.textContent = '⏳ Uploading...';
+  
+  fetch(DRIVE_UPLOAD_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image: imageData, filename: filename })
+  }).then(() => {
+    btn.textContent = '✅ Exported';
+    btn.className = 'btn-export success';
+    setTimeout(() => {
+      btn.textContent = 'Export';
+      btn.className = 'btn-export';
+      btn.disabled = false;
+    }, 3000);
+  }).catch(() => {
+    // If upload fails, save to queue
+    saveToLocalQueue({ id: filename.replace('.jpg', ''), image: imageData, filename: filename })
+      .then(() => {
+        btn.textContent = '📁 Saved Offline';
+        btn.className = 'btn-export uploading';
+        getQueueCount().then(count => {
+          setTimeout(() => {
+            btn.textContent = `Export (${count})`;
+            btn.className = 'btn-export';
+            btn.disabled = false;
+          }, 2000);
+        });
+      });
+  });
+}
+
+// Auto-sync when internet comes back
+window.addEventListener('online', function() {
+  getQueueCount().then(count => {
+    if (count > 0) {
+      console.log('📁 Internet restored! Syncing ' + count + ' receipts...');
+      syncQueue();
+    }
+  });
+});
+
+function syncQueue() {
+  getAllFromQueue().then(items => {
+    if (items.length === 0) return;
+    
+    const btn = document.getElementById('driveBtn');
+    if (!btn) return;
+    
+    btn.textContent = `⏳ Syncing ${items.length}...`;
+    btn.className = 'btn-export uploading';
+    btn.disabled = true;
+    
+    let uploaded = 0;
+    const total = items.length;
+    
+    items.forEach((item) => {
+      sendToDrive(item.image, item.filename, btn);
+      removeFromQueue(item.id);
+      uploaded++;
+      
+      // Update progress
+      btn.textContent = `⏳ Syncing ${uploaded}/${total}...`;
+    });
+    
+    setTimeout(() => {
+      btn.textContent = `✅ Synced ${uploaded}`;
+      btn.className = 'btn-export success';
+      setTimeout(() => {
+        btn.textContent = 'Export';
+        btn.className = 'btn-export';
+        btn.disabled = false;
+      }, 3000);
+    }, 500);
+  });
 }
 
 // ══ RESET ═══════════════════════════════════════════════════════

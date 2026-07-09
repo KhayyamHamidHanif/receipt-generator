@@ -1,4 +1,4 @@
-// ─── Khayyam Advertiser & Auto Decor Center — Service Worker v1 ──────────────────
+// ─── Khayyam Advertiser & Auto Decor Center — Service Worker v2 ──────────────────
 const CACHE_NAME = 'khayyam-auto-v1';
 
 const LOCAL_ASSETS = [
