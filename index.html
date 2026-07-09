@@ -30,10 +30,16 @@ u-dim{display:inline;font-size:.74em;font-weight:400;opacity:.6;color:inherit;fo
 .gemini-box.hidden{display:none}
 
 /* ══ SPLASH ══════════════════════════════════════════════════ */
-#splashScreen{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:92vh;padding:24px 16px 90px;text-align:center;
-  position:relative;background:#ffffff;
+#splashScreen {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:92vh;
+  padding:24px 16px 90px; 
+  text-align:center;
+  position:relative;
+  background:#ffffff;
   overflow:hidden;
 }
 #splashScreen::before{
@@ -62,30 +68,68 @@ u-dim{display:inline;font-size:.74em;font-weight:400;opacity:.6;color:inherit;fo
   pointer-events:none;
   z-index:0;
 }
-#splashScreen::after{
-  content:'🚗 🚙 🚐';
-  position:absolute;
-  font-size:80px;
-  opacity:0.04;
-  bottom:20%;
-  left:10%;
-  right:10%;
-  letter-spacing:40px;
-  white-space:nowrap;
-  pointer-events:none;
-  z-index:0;
-  transform:scaleX(1.2);
+#splashScreen::after {
+  content: '📣🚚🚗🚙🚘🚕🚲🛻🚋🚌🏍️🏎️🚐🚓🚒🤝';
+  position: absolute;
+  font-size: 80px;
+  opacity: 0.06;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  letter-spacing: 40px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  transform: scaleX(1.2);
+  animation: driveCars 50s linear infinite;
+}
+
+@keyframes driveCars {
+  0% { 
+    transform: scaleX(1.2) translateX(-100px);
+    opacity: 0.02;
+  }
+  10% { opacity: 0.08; }
+  90% { opacity: 0.08; }
+  100% { 
+    transform: scaleX(1.2) translateX(100px);
+    opacity: 0.02;
+  }
 }
 #splashScreen > *{position:relative;z-index:1}
-.splash-logo{
-  width:140px;height:140px;border-radius:50%;border:3px solid var(--primary);
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;background:#fff;margin-bottom:16px;
-  box-shadow:0 6px 24px rgba(0,145,80,.15);
+.splash-logo {
+  width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; background: #fff; margin-bottom: 16px;
+  box-shadow: 0 6px 24px rgba(0,145,80,.15);
+  animation: logoFloat 4s ease-in-out infinite;
 }
 .splash-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .splash-logo .initials{font-size:28px;font-weight:900;color:var(--primary);display:none}
-.splash-name{font-size:clamp(38px,9vw,54px);font-weight:900;color:var(--primary-dark);line-height:1.1;margin-bottom:2px;letter-spacing:-.5px}
+.splash-name {
+  font-size: clamp(38px, 9vw, 54px);
+  font-weight: 900;
+  color: var(--primary-dark);
+  line-height: 1.1;
+  margin-bottom: 2px;
+  letter-spacing: -0.5px;
+}
+
+@keyframes splashText {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    color: var(--primary-dark);
+  }
+  25% {
+    transform: scale(1.05) rotate(-1deg);
+    color: var(--primary);
+  }
+  75% {
+    transform: scale(1.05) rotate(1deg);
+    color: var(--primary);
+  }
+}
+
 .splash-subname{font-size:clamp(16px,4vw,24px);font-weight:600;color:var(--primary);margin-bottom:6px}
 .splash-slogan{font-size:clamp(14px,3.5vw,18px);color:var(--text2);font-weight:700;margin-bottom:6px}
 .splash-specialty{font-size:clamp(10px,2.6vw,13px);color:var(--text2);font-weight:600;margin-bottom:5px}
@@ -94,16 +138,16 @@ u-dim{display:inline;font-size:.74em;font-weight:400;opacity:.6;color:inherit;fo
 .splash-products span{white-space:nowrap}
 .splash-phones{font-size:clamp(11px,2.8vw,14px);color:var(--text);font-weight:700;margin-bottom:2px;line-height:1.6}
 .splash-addr{font-size:clamp(10px,2.4vw,12px);color:var(--text3);margin-bottom:18px;line-height:1.4}
-.splash-enter{
+.splash-enter {
   background:radial-gradient(circle at center,var(--primary) 0%,var(--primary-dark) 100%);
   color:#fff;border:none;border-radius:12px;
   padding:14px 44px;font-size:15px;font-weight:800;
   cursor:pointer;letter-spacing:.2px;
   box-shadow:0 4px 14px rgba(0,145,80,.36);
-  transition:transform .15s;margin-bottom:8px;
+  transition:transform .15s;margin-bottom:120px;
 }
 .splash-enter:active{transform:scale(.97)}
-.splash-wm{
+.splash-wm {
   border:none;
 border-radius:0;
 padding:0;
@@ -120,6 +164,186 @@ right:0;
   padding-bottom:env(safe-area-inset-bottom,12px);
 }
 .splash-wm .brand{font-size:12px;font-weight:600;color:rgba(0,0,0,.45)}
+/* ══ SPLASH ANIMATIONS ══ */
+
+/* Glowing dots background */
+#splashScreen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    /* Gradient overlay */
+    linear-gradient(180deg, 
+      rgba(255,255,255,0) 50%,
+      rgba(0,145,80,0.05) 100%
+    ),
+    /* Iron grill lines at 45 degrees */
+    repeating-linear-gradient(45deg,
+      rgba(150,150,150,0.15) 0px,
+      rgba(150,150,150,0.15) 1px,
+      transparent 1px,
+      transparent 50px
+    ),
+    repeating-linear-gradient(-45deg,
+      rgba(150,150,150,0.15) 0px,
+      rgba(150,150,150,0.15) 1px,
+      transparent 1px,
+      transparent 50px
+    ),
+    /* Glowing green dots at intersections - MUCH MORE VISIBLE */
+    radial-gradient(circle at 25px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 75px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 125px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 175px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 225px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 275px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 325px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 375px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 425px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 475px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 525px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 575px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 625px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 675px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 725px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 775px 25px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    /* Row 2 */
+    radial-gradient(circle at 25px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 75px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 125px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 175px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 225px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 275px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 325px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 375px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 425px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 475px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 525px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 575px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 625px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 675px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 725px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 775px 75px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    /* Row 3 */
+    radial-gradient(circle at 25px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 75px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 125px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 175px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 225px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 275px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 325px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 375px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 425px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 475px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 525px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 575px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 625px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 675px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 725px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px),
+    radial-gradient(circle at 775px 125px, rgba(0,145,80,0.60) 0%, rgba(0,145,80,0.20) 2px, transparent 5px);
+  pointer-events: none;
+  z-index: 0;
+  animation: dotPulse 3s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { 
+    opacity: 0.4; 
+  }
+  50% { 
+    opacity: 0.7; 
+  }
+}
+
+/* Animated car icons */
+#splashScreen::after {
+  content: '📣🚚🚗🚙🚘🚕🚲🛻🚋🚌🏍️🏎️🚐🚓🚒🤝;
+  position: absolute;
+  font-size: 80px;
+  opacity: 0.08;
+  bottom: 27%;
+  left: 0%;
+  right: 0%;
+  letter-spacing: 40px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  animation: driveCars 25s linear infinite;
+  width: max-content;
+}
+
+@keyframes driveCars {
+  0% {
+    transform: translateX(0%);
+    opacity: 0.05;
+  }
+  5% {
+    opacity: 0.10;
+  }
+  95% {
+    opacity: 0.10;
+  }
+  100% {
+    transform: translateX(-50%);
+    opacity: 0.05;
+  }
+}
+
+/* Floating logo - ADD THIS LINE to your .splash-logo */
+.splash-logo {
+  animation: logoFloat 6s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(1);
+    box-shadow: 0 6px 24px rgba(0,145,80,.15);
+  }
+  25% {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0,145,80,.20);
+  }
+  50% { 
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 15px 50px rgba(0,145,80,.35);
+  }
+  75% {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0,145,80,.20);
+  }
+}
+
+/* Fade-in brand name - ADD THIS LINE to your .splash-name */
+.splash-name {
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  0% { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulsing button - ADD THIS LINE to your .splash-enter */
+.splash-enter {
+  animation: buttonPulse 3s ease-in-out infinite;
+}
+
+@keyframes buttonPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(0,145,80,.36);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 6px 24px rgba(0,145,80,.50);
+  }
+}
 
 /* ══ HEADER ══════════════════════════════════════════════════ */
 #mainApp{display:none}
@@ -408,7 +632,7 @@ right:0;
     <div class="card-title">Items</div>
     <table class="ledger-grid" id="ledgerTable">
       <thead>
-        <tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th></tr>
+        <tr><th>Item</th><th>Price</th><th>Quantity</th><th>Total</th></tr>
       </thead>
       <tbody id="ledgerBody">
         <tr id="row1">
@@ -419,7 +643,7 @@ right:0;
               <span class="gemini-box hidden" id="priceGemini1">0 PKR</span>
             </div>
           </td>
-          <td class="qty-col"><input type="number" id="qty1" placeholder="1 QTY" oninput="handleRowInput(1)" min="1" value="1"/></td>
+          <td class="qty-col"><input type="number" id="qty1" placeholder="0 QTY" oninput="handleRowInput(1)" min="0"/></td>
           <td class="total-col row-total" id="total1">—</td>
         </tr>
         <tr id="row2" class="row-locked" onclick="unlockRow(2)">
@@ -430,7 +654,7 @@ right:0;
               <span class="gemini-box hidden" id="priceGemini2">0 PKR</span>
             </div>
           </td>
-          <td class="qty-col"><input type="number" id="qty2" placeholder="1 QTY" oninput="handleRowInput(2)" min="1" value="1" readonly/></td>
+          <td class="qty-col"><input type="number" id="qty2" placeholder="0 QTY" oninput="handleRowInput(2)" min="0" readonly/></td></td>
           <td class="total-col row-total" id="total2">—</td>
         </tr>
       </tbody>
@@ -558,7 +782,7 @@ const LOGO_BASE64 = 'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYGB
 // ══ PWA ═════════════════════════════════════════════════════════
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
       .then(r => console.log('SW:', r.scope))
       .catch(e => console.warn('SW:', e));
   });
@@ -750,7 +974,7 @@ function addNewRow() {
         <span class="gemini-box hidden" id="priceGemini${rowCounter}">0 PKR</span>
       </div>
     </td>
-    <td class="qty-col"><input type="number" id="qty${rowCounter}" placeholder="1 QTY" oninput="handleRowInput(${rowCounter})" min="1" value="1" readonly/></td>
+    <td class="qty-col"><input type="number" id="qty${rowCounter}" placeholder="0 QTY" oninput="handleRowInput(${rowCounter})" min="0" readonly/></td>
     <td class="total-col row-total" id="total${rowCounter}">—</td>
   `;
   
