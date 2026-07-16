@@ -1270,10 +1270,10 @@ function buildReceiptHTML(rid, rows, custName, custPhone, vehicleNo, mgrName,
   
   let rowsHtml = '';
   rows.forEach((row) => {
-    rowsHtml += `<div class="rr" style="border-bottom:1px solid transparent">
-      <span>${row.sr}. ${row.item}</span>
-      <span class="rval">${fmtPK(row.price)} × ${row.qty} = <strong>${fmtPK(row.total)}</strong><span class="rtu"> PKR</span></span>
-    </div>`;
+rowsHtml += `<div class="rr" style="border-bottom:1px solid transparent">
+  <span>${row.sr}. ${row.item}</span>
+  <span class="rval"><strong>${fmtPK(row.total)}</strong><span class="rtu"> PKR</span></span>
+</div>`;
   });
   
   // Determine payment status and colors
